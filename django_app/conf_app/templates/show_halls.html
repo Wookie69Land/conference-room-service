@@ -6,7 +6,7 @@
     <table class="table table-striped">
         <thead>
             <th>Name</th>
-            <th>Status</th>
+            <th>Status for today</th>
         </thead>
         {%  for hall in halls %}
         <tr>
@@ -18,5 +18,5 @@
         </tr>
         {% endfor %}
     </table><br>
-    <h5><a href="room/new">Add new hall</a></h5>
+    <h5><a href="{% url 'add_hall' %}">Add new hall</a></h5>
 {% endblock %}

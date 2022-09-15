@@ -8,6 +8,7 @@
     <button type="submit" name="sort" value="1">from lowest</button>
     <button type="submit" name="sort" value="0">by reservation date</button><br>
     </label>
+    </form>
     <h4>Details of our halls:</h4>
     <h4 style="color: #ba2121">{% if message %}{{ message }}{% endif %}</h4>
     <table class="table table-striped">
@@ -30,5 +31,5 @@
         </tr>
         {% endfor %}
     </table><br>
-    <h5><a href="room/new">Add new hall</a></h5>
+    <h5><a href="{% url 'add_hall' %}">Add new hall</a></h5>
 {% endblock %}

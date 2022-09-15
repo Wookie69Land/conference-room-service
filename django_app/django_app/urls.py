@@ -19,11 +19,12 @@ from conf_app import views as v
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('halls', v.show_halls, name='halls'),
+    path('halls/', v.show_halls, name='halls'),
     path('room/new', v.add_hall, name='add_hall'),
-    path('halls_details', v.show_halls_details, name='halls_details'),
+    path('halls_details/', v.show_halls_details, name='halls_details'),
     path('room/reserve/<int:id>', v.add_reservation, name='add_reservation'),
-    path('reserve', v.new_reservation, name='new_reservation'),
+    path('reserve/', v.new_reservation, name='new_reservation'),
     path('room/delete/<int:id>', v.delete_hall, name='delete_hall'),
     path('room/modify/<int:id>', v.edit_hall, name='edit_hall'),
+    path('reservations/', v.show_reservations, name='show_reservations'),
 ]

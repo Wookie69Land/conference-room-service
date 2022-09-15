@@ -48,7 +48,7 @@ def show_halls_details(request):
             request.session['order_by'] = 1
         else:
             request.session['order_by'] = 0
-    return render(request, 'show_halls_details.html', context={'halls': halls, 'reservations': reservations})
+        return render(request, 'show_halls_details.html', context={'halls': halls, 'reservations': reservations})
 
 def add_hall(request):
     if 'message' in request.session:
@@ -76,14 +76,18 @@ def add_reservation(request, id):
     if 'message' in request.session:
         del request.session['message']
     hall = ConferenceHall.objects.get(pk=id)
+    reservations = Reservation.objects.all()
+    hall_res = []
+    for r in reservations:
+        if r.hall == hall:
+            hall_res.append(f'{r. date}: {r.description}')
     form = ReservationForm()
     if request.method == 'GET':
-        return render(request, 'add_reservation.html', context={'form': form, 'hall': hall})
+        return render(request, 'add_reservation.html', context={'form': form, 'hall': hall, 'hall_res': hall_res})
     else:
         description = request.POST.get('description')
         date = datetime.strptime(request.POST.get('date'), '%Y-%m-%d')
         if date.date() >= datetime.today().date():
-            reservations = Reservation.objects.all()
             if len(reservations) != 0:
                 for r in reservations:
                     if r.hall == hall and r.date == date.date():
@@ -154,3 +158,26 @@ def edit_hall(request, id):
         else:
             message = 'Something went wrong. Hall was not added do database'
             return render(request, 'edit_hall.html', context={'hall': hall, 'message': message})
+
+def show_reservations(request):
+    if 'message' in request.session:
+        del request.session['message']
+    reservations = Reservation.objects.all()
+    if request.method == 'GET':
+        if request.session.get('order_by_r'):
+            if request.session.get('order_by_r') == 2:
+                reservations = Reservation.objects.all().order_by('-date')
+            elif request.session.get('order_by_r') == 1:
+                reservations = Reservation.objects.all().order_by('date')
+        return render(request, 'show_reservations.html', context={'reservations': reservations})
+    else:
+        if request.POST.get('sort') == "2":
+            reservations = Reservation.objects.all().order_by('-date')
+            request.session['order_by_r'] = 2
+        elif request.POST.get('sort') == "1":
+            reservations = Reservation.objects.all().order_by('date')
+            request.session['order_by_r'] = 1
+        else:
+            request.session['order_by'] = 0
+        return render(request, 'show_reservations.html', context={'reservations': reservations})
+

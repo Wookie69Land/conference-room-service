@@ -16,4 +16,11 @@
     {% if message %}
     <h4 style="color: #ba2121">{{ message }}</h4>
     {% endif %}
+    <table class="table table-bordered border-primary">
+        {% for i in hall_res %}
+        <tr>
+            <td>{{ i }}</td>
+        </tr>
+        {% endfor %}
+    </table>
 {% endblock %}

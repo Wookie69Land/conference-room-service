@@ -22,7 +22,7 @@
                   <a class="nav-link active" aria-current="page" href="{% url 'new_reservation' %}">Make reservation</a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link active" aria-current="page" href="/">Show reservations</a>
+                  <a class="nav-link active" aria-current="page" href="{% url 'show_reservations' %}">Show reservations</a>
                 </li>
                 <li class="nav-item">
                   <a class="nav-link" href="search-hall">Search hall</a>
@@ -45,5 +45,13 @@
 {% endblock %}
 {% block edit_hall %}
 {% endblock %}
+{% block show_reservations %}
+{% endblock %}
+<div class="card text-center">
+    <footer>
+        <p>Author: Lucas Land</p>
+        <p><a href="mailto:lukaskraj@gmail.com">lukaskraj@gmail.com</a> </p>
+    </footer>
+</div>
 </body>
 </html>
