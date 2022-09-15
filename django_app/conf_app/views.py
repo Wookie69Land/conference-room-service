@@ -181,3 +181,43 @@ def show_reservations(request):
             request.session['order_by'] = 0
         return render(request, 'show_reservations.html', context={'reservations': reservations})
 
+def search_halls (request):
+    url = 'search/'
+    if request.method == 'GET':
+        return render(request, 'search_halls.html')
+    else:
+        if request.POST.get('name'):
+            name = request.POST.get('name')
+            hall = ConferenceHall.objects.get(name=name)
+            if hall:
+                url += f'{hall.id}/'
+            else:
+                message = 'There is no such a hall in database'
+                return render(request, 'search_halls.html', context={'message': message})
+        else:
+            url += '0/'
+        if request.POST.get('capacity'):
+            capacity = request.POST.get('capacity')
+            url += f'{capacity}/'
+        else:
+            url += '0/'
+        if request.POST.getlist('projector'):
+            url += '1'
+        else:
+            url += '0'
+        return redirect(url)
+
+def find_halls(request, hall_id, capacity, projector):
+    halls = ConferenceHall.objects.all()
+    reservations = Reservation.objects.all()
+    if int(hall_id) != 0:
+        halls = halls.filter(Q(pk=int(hall_id)))
+    if int(capacity) != 0:
+        halls = halls.exclude(capacity__lte=int(capacity)-1)
+    if int(projector) != 0:
+        halls = halls.exclude(projector=False)
+    else:
+        halls = halls.exclude(projector=True)
+    message = 'According to your search conditions.'
+    return render(request, 'show_halls_details.html', context={'halls': halls, 'reservations': reservations, 'message': message})
+

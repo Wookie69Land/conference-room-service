@@ -25,7 +25,7 @@
                   <a class="nav-link active" aria-current="page" href="{% url 'show_reservations' %}">Show reservations</a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="search-hall">Search hall</a>
+                  <a class="nav-link" href="{% url 'search_halls' %}">Search hall</a>
                 </li>
               </div>
             </div>
@@ -46,6 +46,8 @@
 {% block edit_hall %}
 {% endblock %}
 {% block show_reservations %}
+{% endblock %}
+{% block search_hall %}
 {% endblock %}
 <div class="card text-center">
     <footer>

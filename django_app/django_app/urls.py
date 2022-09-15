@@ -14,7 +14,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, re_path
 from conf_app import views as v
 
 urlpatterns = [
@@ -27,4 +27,6 @@ urlpatterns = [
     path('room/delete/<int:id>', v.delete_hall, name='delete_hall'),
     path('room/modify/<int:id>', v.edit_hall, name='edit_hall'),
     path('reservations/', v.show_reservations, name='show_reservations'),
+    path('search', v.search_halls, name='search_halls'),
+    re_path(r'^search/(?P<hall_id>(\d+))/(?P<capacity>(\d+))/(?P<projector>(\d))$', v.find_halls, name='find_halls'),
 ]
