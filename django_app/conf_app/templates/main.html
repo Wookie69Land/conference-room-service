@@ -16,13 +16,13 @@
             <div class="collapse navbar-collapse" id="navbarNav">
               <ul class="navbar-nav">
                 <li class="nav-item">
-                  <a class="nav-link active" aria-current="page" href="halls_details">Our halls</a>
+                  <a class="nav-link active" aria-current="page" href="{% url 'halls_details' %}">Our halls</a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link active" aria-current="page" href="reserve">Make reservation</a>
+                  <a class="nav-link active" aria-current="page" href="{% url 'new_reservation' %}">Make reservation</a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link active" aria-current="page" href="show_reservations">Show reservations</a>
+                  <a class="nav-link active" aria-current="page" href="/">Show reservations</a>
                 </li>
                 <li class="nav-item">
                   <a class="nav-link" href="search-hall">Search hall</a>
@@ -42,6 +42,8 @@
 {% block add_reservation %}
 {% endblock %}
 {% block new_reservation %}
+{% endblock %}
+{% block edit_hall %}
 {% endblock %}
 </body>
 </html>

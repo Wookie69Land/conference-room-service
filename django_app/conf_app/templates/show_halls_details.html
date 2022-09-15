@@ -19,14 +19,14 @@
         </thead>
         {%  for hall in halls %}
         <tr>
-            <td><a href="room/{{ hall.id }}" style="color: #003366">{{ hall }}</a><br>
+            <td><a href="room/{{ hall.id }}" style="color: #003366">{{ hall.name }}</a><br>
                 <small class="text-muted"><a href="room/modify/{{ hall.id }}">edit</a></small>
                 <small class="text-muted"><a href="room/delete/{{ hall.id }}">delete</a></small>
                 <small class="text-muted"><a href="room/reserve/{{ hall.id }}">reserve</a></small>
             </td>
             <td>{{ hall.capacity }}</td>
             <td>{{ hall.projector }}</td>
-            <td>{% for r in reservations %}{% if r.hall == hall %}{{ r.date }}<br>{% endif %}{% endfor %}</td>
+            <td>{% for r in reservations %}{% if r.hall == hall %}{{ r.date }} : {{ r.description }}<br>{% endif %}{% endfor %}</td>
         </tr>
         {% endfor %}
     </table><br>

@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+#from django.utils.timezone import datetime
 from django.http import HttpResponse, Http404
 from django.db.models import Q
 from conf_app.models import ConferenceHall, Reservation
@@ -6,18 +7,21 @@ from conf_app.forms import HallForm, ReservationForm
 from datetime import datetime
 
 def show_halls(request):
-    if 'message' in request.session:
-        del request.session['message']
     halls = ConferenceHall.objects.all()
     reservations = Reservation.objects.all()
     status_d = {}
+    check_r = []
+    check_d = []
+    for r in reservations:
+        check_r.append(r.hall)
     for h in halls:
-        for r in reservations:
-            if h != r.hall:
-                status = 'Free'
-            else:
-                if r.date == datetime.today():
+        if h not in check_r:
+            status = 'Free'
+        else:
+            for r in reservations:
+                if datetime.today().date() == r.date and h == r.hall:
                     status = 'Reserved'
+                    break
                 else:
                     status = 'Free'
         status_d[h.id] = status
@@ -78,7 +82,7 @@ def add_reservation(request, id):
     else:
         description = request.POST.get('description')
         date = datetime.strptime(request.POST.get('date'), '%Y-%m-%d')
-        if date >= datetime.today():
+        if date.date() >= datetime.today().date():
             reservations = Reservation.objects.all()
             if len(reservations) != 0:
                 for r in reservations:
@@ -96,9 +100,11 @@ def new_reservation(request):
     if 'message' in request.session:
         del request.session['message']
     form = ReservationForm()
+    halls = ConferenceHall.objects.all()
     if request.method == 'GET':
-        return render(request, 'add_reservation.html', context={'form': form})
+        return render(request, 'new_reservation.html', context={'form': form, 'halls': halls})
     else:
+        hall = ConferenceHall.objects.get(pk=request.POST.get('hall'))
         description = request.POST.get('description')
         date = datetime.strptime(request.POST.get('date'), '%Y-%m-%d')
         if date >= datetime.today():
@@ -107,11 +113,44 @@ def new_reservation(request):
                 for r in reservations:
                     if r.hall == hall and r.date == date.date():
                         message = 'This hall is reserved for this date'
-                        return render(request, 'add_reservation.html', context={'form': form, 'message': message, 'hall': hall})
+                        return render(request, 'new_reservation.html', context={'form': form, 'message': message, 'hall': hall})
             reservation = Reservation.objects.create(date=date, hall=hall, description=description)
             request.session['message'] = f'{reservation} added to database.'
             return redirect('halls')
         else:
             message = 'Wrong date. Reservation was not added do database'
-            return render(request, 'add_reservation.html', context={'form': form, 'message': message, 'hall': hall})
+            return render(request, 'new_reservation.html', context={'form': form, 'message': message, 'hall': hall})
 
+def delete_hall(request, id):
+    if 'message' in request.session:
+        del request.session['message']
+    hall = ConferenceHall.objects.get(pk=id)
+    hall.delete()
+    request.session['message'] = f"{hall.name} hall was deleted from database."
+    return redirect('halls')
+
+def edit_hall(request, id):
+    if 'message' in request.session:
+        del request.session['message']
+    hall = ConferenceHall.objects.get(pk=id)
+    if request.method == 'GET':
+        return render(request, 'edit_hall.html', context={'hall': hall})
+    else:
+        name = request.POST.get('name')
+        capacity = request.POST.get('capacity')
+        projector = request.POST.get('projector')
+        halls = ConferenceHall.objects.all()
+        names = []
+        for h in halls:
+            if h.name != name:
+                names.append(h.name)
+        if name and int(capacity) > 0 and name not in names:
+            hall.name = name
+            hall.capacity = int(capacity)
+            hall.projector = False if projector == None else True
+            hall.save()
+            request.session['message'] = f'{name} was edited.'
+            return redirect('halls')
+        else:
+            message = 'Something went wrong. Hall was not added do database'
+            return render(request, 'edit_hall.html', context={'hall': hall, 'message': message})

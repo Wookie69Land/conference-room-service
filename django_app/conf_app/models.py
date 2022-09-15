@@ -6,7 +6,8 @@ class ConferenceHall(models.Model):
     projector = models.BooleanField()
 
     def __str__(self):
-        return self.name
+        return f'{self.name} with capacity {str(self.capacity)} places'
+
 
 class Reservation(models.Model):
     date = models.DateField()
@@ -17,4 +18,7 @@ class Reservation(models.Model):
 
     def __str__(self):
         return f'Reservation {self.id} for {self.hall}'
+
+    def get_capacity(self):
+        return self.hall.capacity
 

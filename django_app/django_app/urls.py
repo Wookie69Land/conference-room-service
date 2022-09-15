@@ -24,4 +24,6 @@ urlpatterns = [
     path('halls_details', v.show_halls_details, name='halls_details'),
     path('room/reserve/<int:id>', v.add_reservation, name='add_reservation'),
     path('reserve', v.new_reservation, name='new_reservation'),
+    path('room/delete/<int:id>', v.delete_hall, name='delete_hall'),
+    path('room/modify/<int:id>', v.edit_hall, name='edit_hall'),
 ]
