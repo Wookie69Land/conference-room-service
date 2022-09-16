@@ -11,7 +11,6 @@ def show_halls(request):
     reservations = Reservation.objects.all()
     status_d = {}
     check_r = []
-    check_d = []
     for r in reservations:
         check_r.append(r.hall)
     for h in halls:
@@ -31,7 +30,7 @@ def show_halls_details(request):
     if 'message' in request.session:
         del request.session['message']
     halls = ConferenceHall.objects.all()
-    reservations = Reservation.objects.all()
+    reservations = Reservation.objects.filter(date__gte=datetime.today().date())
     if request.method == 'GET':
         if request.session.get('order_by'):
             if request.session.get('order_by') == 2:
@@ -76,7 +75,7 @@ def add_reservation(request, id):
     if 'message' in request.session:
         del request.session['message']
     hall = ConferenceHall.objects.get(pk=id)
-    reservations = Reservation.objects.all()
+    reservations = Reservation.objects.filter(date__gte=datetime.today().date())
     hall_res = []
     for r in reservations:
         if r.hall == hall:
@@ -112,7 +111,7 @@ def new_reservation(request):
         description = request.POST.get('description')
         date = datetime.strptime(request.POST.get('date'), '%Y-%m-%d')
         if date >= datetime.today():
-            reservations = Reservation.objects.all()
+            reservations = Reservation.objects.filter(date__gte=datetime.today().date())
             if len(reservations) != 0:
                 for r in reservations:
                     if r.hall == hall and r.date == date.date():

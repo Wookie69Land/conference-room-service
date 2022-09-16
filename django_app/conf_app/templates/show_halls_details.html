@@ -20,9 +20,9 @@
         {%  for hall in halls %}
         <tr>
             <td><a href="room/{{ hall.id }}" style="color: #003366">{{ hall.name }}</a><br>
-                <small class="text-muted"><a href="room/modify/{{ hall.id }}">edit</a></small>
-                <small class="text-muted"><a href="room/delete/{{ hall.id }}">delete</a></small>
-                <small class="text-muted"><a href="room/reserve/{{ hall.id }}">reserve</a></small>
+                <small class="text-muted"><a href="/room/modify/{{ hall.id }}">edit</a></small>
+                <small class="text-muted"><a href="/room/delete/{{ hall.id }}">delete</a></small>
+                <small class="text-muted"><a href="/room/reserve/{{ hall.id }}">reserve</a></small>
             </td>
             <td>{{ hall.capacity }}</td>
             <td>{{ hall.projector }}</td>
