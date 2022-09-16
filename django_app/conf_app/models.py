@@ -21,4 +21,6 @@ class Reservation(models.Model):
 
     def get_capacity(self):
         return self.hall.capacity
+    def get_hall_id(self):
+        return self.hall.id
 

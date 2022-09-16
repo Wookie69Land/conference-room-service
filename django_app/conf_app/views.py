@@ -161,7 +161,7 @@ def edit_hall(request, id):
 def show_reservations(request):
     if 'message' in request.session:
         del request.session['message']
-    reservations = Reservation.objects.all()
+    reservations = Reservation.objects.all().order_by('id')
     if request.method == 'GET':
         if request.session.get('order_by_r'):
             if request.session.get('order_by_r') == 2:
@@ -176,8 +176,9 @@ def show_reservations(request):
         elif request.POST.get('sort') == "1":
             reservations = Reservation.objects.all().order_by('date')
             request.session['order_by_r'] = 1
-        else:
-            request.session['order_by'] = 0
+        elif request.POST.get('sort') == "0":
+            reservations = Reservation.objects.all().order_by('id')
+            request.session['order_by_r'] = 0
         return render(request, 'show_reservations.html', context={'reservations': reservations})
 
 def search_halls (request):
@@ -225,26 +226,40 @@ def edit_reservation(request, id):
         del request.session['message']
     res = Reservation.objects.get(pk=id)
     reservations = Reservation.objects.all()
+    halls = ConferenceHall.objects.exclude(pk=res.get_hall_id())
     if request.method == 'GET':
-        return render(request, 'edit_res.html', context={'res': res, 'reservations': reservations})
+        return render(request, 'edit_res.html', context={'res': res, 'halls': halls, 'reservations': reservations})
     else:
         date = datetime.strptime(request.POST.get('date'), '%Y-%m-%d')
         description = request.POST.get('description')
+        hall = ConferenceHall.objects.get(pk=int(request.POST.get('hall')))
         if date.date() >= datetime.today().date():
             if len(reservations) != 0:
                 for r in reservations:
-                    if r.hall == hall and r.date == date.date():
-                        message = 'This hall is reserved for this date'
-                        return render(request, 'edit_res.html', context={'res': res, 'message': message})
+                    if r.hall != res.hall:
+                        if r.hall == hall and r.date == date.date():
+                            message = 'This hall is reserved for this date'
+                            return render(request, 'edit_res.html', context={'res': res, 'halls': halls, 'message': message})
+                    elif r.hall == res.hall and res.date != date.date():
+                        if res.hall == r.hall and r.date == date.date():
+                            message = 'This hall is reserved for this date'
+                            return render(request, 'edit_res.html', context={'res': res, 'halls': halls, 'message': message})
+            res.hall = hall
             res.date = date
             res.description = description
             res.save()
-            request.session['message'] = f'{reservation} was edited.'
+            request.session['message'] = f'{res} was edited.'
             return redirect('halls')
         else:
             message = 'Wrong date. Reservation was not edited'
-            return render(request, 'edit_res.html', context={'res': res, 'message': message})
+            return render(request, 'edit_res.html', context={'res': res, 'halls': halls, 'message': message})
 
-
+def delete_reservation(request, id):
+    if 'message' in request.session:
+        del request.session['message']
+    res = Reservation.objects.get(pk=id)
+    res.delete()
+    request.session['message'] = f"Reservation nr {id} for {res.hall} was deleted from database."
+    return redirect('halls')
 
 
