@@ -29,4 +29,6 @@ urlpatterns = [
     path('reservations/', v.show_reservations, name='show_reservations'),
     path('search', v.search_halls, name='search_halls'),
     re_path(r'^search/(?P<hall_id>(\d+))/(?P<capacity>(\d+))/(?P<projector>(\d))$', v.find_halls, name='find_halls'),
+    path('res/modify/<int:id>', v.edit_reservation, name='edit_reservation'),
+    path('res/delete/<int:id>', v.delete_reservation, name='delete_reservation'),
 ]

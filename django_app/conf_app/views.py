@@ -220,3 +220,31 @@ def find_halls(request, hall_id, capacity, projector):
     message = 'According to your search conditions.'
     return render(request, 'show_halls_details.html', context={'halls': halls, 'reservations': reservations, 'message': message})
 
+def edit_reservation(request, id):
+    if 'message' in request.session:
+        del request.session['message']
+    res = Reservation.objects.get(pk=id)
+    reservations = Reservation.objects.all()
+    if request.method == 'GET':
+        return render(request, 'edit_res.html', context={'res': res, 'reservations': reservations})
+    else:
+        date = datetime.strptime(request.POST.get('date'), '%Y-%m-%d')
+        description = request.POST.get('description')
+        if date.date() >= datetime.today().date():
+            if len(reservations) != 0:
+                for r in reservations:
+                    if r.hall == hall and r.date == date.date():
+                        message = 'This hall is reserved for this date'
+                        return render(request, 'edit_res.html', context={'res': res, 'message': message})
+            res.date = date
+            res.description = description
+            res.save()
+            request.session['message'] = f'{reservation} was edited.'
+            return redirect('halls')
+        else:
+            message = 'Wrong date. Reservation was not edited'
+            return render(request, 'edit_res.html', context={'res': res, 'message': message})
+
+
+
+
