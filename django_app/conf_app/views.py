@@ -53,7 +53,6 @@ def hall_details(request, id):
     reservations = Reservation.objects.filter(Q(hall=ConferenceHall.objects.get(pk=id)))
     return render(request, 'show_halls_details.html', context={'halls': halls, 'reservations': reservations})
 
-
 def add_hall(request):
     if 'message' in request.session:
         del request.session['message']
@@ -227,7 +226,23 @@ def find_halls(request, hall_id, capacity, projector):
         message = 'According to your search conditions.'
     else:
         message = 'There is no hall that meets these criteria.'
-    return render(request, 'show_halls_details.html', context={'halls': halls, 'reservations': reservations, 'message': message})
+    if request.method == 'GET':
+        if request.session.get('order_by'):
+            if request.session.get('order_by') == 2:
+                halls = halls.order_by('-capacity')
+            elif request.session.get('order_by') == 1:
+                halls = halls.order_by('capacity')
+        return render(request, 'show_halls_details.html', context={'halls': halls, 'reservations': reservations, 'message': message})
+    else:
+        if request.POST.get('sort') == "2":
+            halls = halls.order_by('-capacity')
+            request.session['order_by'] = 2
+        elif request.POST.get('sort') == "1":
+            halls = halls.order_by('capacity')
+            request.session['order_by'] = 1
+        else:
+            request.session['order_by'] = 0
+        return render(request, 'show_halls_details.html', context={'halls': halls, 'reservations': reservations})
 
 def edit_reservation(request, id):
     if 'message' in request.session:

@@ -6,7 +6,7 @@ class ConferenceHall(models.Model):
     projector = models.BooleanField()
 
     def __str__(self):
-        return f'{self.name} with capacity {str(self.capacity)} places'
+        return f'{self.name} with capacity {self.capacity} places'
 
 
 class Reservation(models.Model):
