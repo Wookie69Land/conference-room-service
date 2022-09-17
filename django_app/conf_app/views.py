@@ -295,9 +295,7 @@ def find_res(request, date, hall_id, word):
     reservations = []
     if hall_id != '0':
         hall = ConferenceHall.objects.get(pk=int(hall_id))
-        print(hall)
         reservations = Reservation.objects.filter(Q(hall=hall))
-        print(reservations)
     if date != '0000-00-00':
         date = datetime.strptime(date, '%Y-%m-%d')
         if hall_id != '0':
