@@ -27,6 +27,9 @@
                 <li class="nav-item">
                   <a class="nav-link" href="{% url 'search_halls' %}">Search hall</a>
                 </li>
+                  <li class="nav-item">
+                  <a class="nav-link" href="{% url 'search_res' %}">Search reservation</a>
+                </li>
               </div>
             </div>
           </div>
@@ -50,6 +53,8 @@
 {% block search_hall %}
 {% endblock %}
 {% block edit_reservation %}
+{% endblock %}
+{% block search_res %}
 {% endblock %}
 <div class="card text-center">
     <footer>

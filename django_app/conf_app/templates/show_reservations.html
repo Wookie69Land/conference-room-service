@@ -1,7 +1,6 @@
 {% extends 'main.html' %}
 {% block show_reservations %}
     <h4 style="color: #ba2121">{% if message %}{{ message }}{% endif %}</h4>
-    <h4 style="color: #ba2121">Last action: {% if request.session.message %}{{ request.session.message }}{% endif %}</h4>
     <form id="submit_area" method="POST">
         {% csrf_token %}
     <label>Sort by date:

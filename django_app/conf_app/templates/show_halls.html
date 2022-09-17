@@ -1,8 +1,8 @@
 {% extends 'main.html' %}
 {% block show_halls %}
-    <h4 style="color: #ba2121">{% if message %}{{ message }}{% endif %}</h4>
-    <h4 style="color: #ba2121">Last action: {% if request.session.message %}{{ request.session.message }}{% endif %}</h4>
-    <h4>Conference halls list:</h4>
+    <h6 style="color: #ba2121">{% if message %}{{ message }}{% endif %}</h6>
+    <h6 style="color: #ba2121">Last action: {% if request.session.message %}{{ request.session.message }}{% endif %}</h6>
+    <h3>Conference halls list:</h3>
     <table class="table table-striped">
         <thead>
             <th>Name</th>

@@ -31,4 +31,6 @@ urlpatterns = [
     re_path(r'^search/(?P<hall_id>(\d+))/(?P<capacity>(\d+))/(?P<projector>(\d))$', v.find_halls, name='find_halls'),
     path('res/modify/<int:id>', v.edit_reservation, name='edit_reservation'),
     path('res/delete/<int:id>', v.delete_reservation, name='delete_reservation'),
+    re_path(r'^search_res/(?P<date>\d{4}-\d{2}-\d{2})/(?P<hall_id>(\d+))/(?P<word>(\w+))$', v.find_res, name='find_res'),
+    path('search_res', v.search_res, name='search_res'),
 ]

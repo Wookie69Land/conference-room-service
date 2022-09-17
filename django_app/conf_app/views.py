@@ -1,5 +1,4 @@
 from django.shortcuts import render, redirect
-#from django.utils.timezone import datetime
 from django.http import HttpResponse, Http404
 from django.db.models import Q
 from conf_app.models import ConferenceHall, Reservation
@@ -262,4 +261,55 @@ def delete_reservation(request, id):
     request.session['message'] = f"Reservation nr {id} for {res.hall} was deleted from database."
     return redirect('halls')
 
+def search_res (request):
+    url = 'search_res/'
+    if request.method == 'GET':
+        halls = ConferenceHall.objects.all()
+        return render(request, 'search_res.html', context={'halls': halls})
+    else:
+        if request.POST.get('date'):
+            date = datetime.strptime(request.POST.get('date'), '%Y-%m-%d')
+            if date:
+                url += f'{date.date()}/'
+            else:
+                message = 'Please enter a valid date'
+                return render(request, 'search_res.html', context={'message': message})
+        else:
+            url += '0000-00-00/'
+        if request.POST.get('hall_id'):
+            hall_id = request.POST.get('hall_id')
+            url += f'{int(hall_id)}/'
+        else:
+            url += '0/'
+        if request.POST.get('word') and request.POST.get('word') != '':
+            word = request.POST.get('word').lower()
+            url += f'{word}'
+        else:
+            url += '0'
+        return redirect(url)
+
+def find_res(request, date, hall_id, word):
+    reservations = []
+    if hall_id != '0':
+        hall = ConferenceHall.objects.get(pk=int(hall_id))
+        print(hall)
+        reservations = Reservation.objects.filter(Q(hall=hall))
+        print(reservations)
+    if date != '0000-00-00':
+        date = datetime.strptime(date, '%Y-%m-%d')
+        if hall_id != '0':
+            reservations = reservations.exclude(date__lt=date.date())
+        else:
+            reservations = Reservation.objects.filter(date__gte=date.date())
+    if word != "0":
+        if hall_id != '0' or date != '0000-00-00':
+            for r in reservations:
+                if word not in r.description.casefold():
+                    reservations = reservations.exclude(pk=r.id)
+        else:
+            reservations = Reservation.objects.filter(description__icontains=word)
+    if word == '0' and hall_id == '0' and date == '0000-00-00':
+        reservations = Reservation.objects.all()
+    message = 'According to your search conditions.'
+    return render(request, 'show_reservations.html', context={'reservations': reservations, 'message': message})
 
