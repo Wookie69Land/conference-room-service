@@ -48,6 +48,12 @@ def show_halls_details(request):
             request.session['order_by'] = 0
         return render(request, 'show_halls_details.html', context={'halls': halls, 'reservations': reservations})
 
+def hall_details(request, id):
+    halls = ConferenceHall.objects.filter(Q(pk=int(id)))
+    reservations = Reservation.objects.filter(Q(hall=ConferenceHall.objects.get(pk=id)))
+    return render(request, 'show_halls_details.html', context={'halls': halls, 'reservations': reservations})
+
+
 def add_hall(request):
     if 'message' in request.session:
         del request.session['message']

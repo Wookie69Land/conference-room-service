@@ -10,7 +10,7 @@
         </thead>
         {%  for hall in halls %}
         <tr>
-            <td><a href="hall_details/{{ hall.id }}" style="color: #003366">{{ hall }}</a>
+            <td><a href="/room/{{ hall.id }}" style="color: #003366">{{ hall }}</a>
                 <br><small class="text-muted"><a href="/room/modify/{{ hall.id }}">edit</a></small>
                 <small class="text-muted"><a href="/room/delete/{{ hall.id }}">delete</a></small>
             </td>

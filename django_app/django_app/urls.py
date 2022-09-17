@@ -21,6 +21,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('halls/', v.show_halls, name='halls'),
     path('room/new', v.add_hall, name='add_hall'),
+    path('room/<int:id>', v.hall_details, name='hall_details'),
     path('halls_details/', v.show_halls_details, name='halls_details'),
     path('room/reserve/<int:id>', v.add_reservation, name='add_reservation'),
     path('reserve/', v.new_reservation, name='new_reservation'),
