@@ -1,5 +1,6 @@
 {% extends 'main.html' %}
 {% block show_halls_details %}
+    <h5 style="color: #ba2121">{% if message %}{{ message }}{% endif %}</h5>
     <form id="submit_area" method="POST">
         {% csrf_token %}
     <label>Sort by capacity:
@@ -9,7 +10,6 @@
     </label>
     </form>
     <h4>Details of our halls:</h4>
-    <h6>{% if message %}{{ message }}{% endif %}</h6>
     <table class="table table-striped">
         <thead>
             <th>Name</th>

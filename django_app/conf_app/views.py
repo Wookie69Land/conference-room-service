@@ -217,7 +217,10 @@ def find_halls(request, hall_id, capacity, projector):
         halls = halls.exclude(projector=False)
     else:
         halls = halls.exclude(projector=True)
-    message = 'According to your search conditions.'
+    if len(halls) != 0:
+        message = 'According to your search conditions.'
+    else:
+        message = 'There is no hall that meets these criteria.'
     return render(request, 'show_halls_details.html', context={'halls': halls, 'reservations': reservations, 'message': message})
 
 def edit_reservation(request, id):
@@ -310,6 +313,9 @@ def find_res(request, date, hall_id, word):
             reservations = Reservation.objects.filter(description__icontains=word)
     if word == '0' and hall_id == '0' and date == '0000-00-00':
         reservations = Reservation.objects.all()
-    message = 'According to your search conditions.'
+    if len(reservations) != 0:
+        message = 'According to your search conditions.'
+    else:
+        message = 'There is no reservations that meets these criteria.'
     return render(request, 'show_reservations.html', context={'reservations': reservations, 'message': message})
 
