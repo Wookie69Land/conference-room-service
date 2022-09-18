@@ -336,5 +336,22 @@ def find_res(request, date, hall_id, word):
         message = 'According to your search conditions.'
     else:
         message = 'There is no reservations that meets these criteria.'
-    return render(request, 'show_reservations.html', context={'reservations': reservations, 'message': message})
+    if request.method == 'GET':
+        if request.session.get('order_by_r'):
+            if request.session.get('order_by_r') == 2:
+                reservations = reservations.order_by('-date')
+            elif request.session.get('order_by_r') == 1:
+                reservations = reservations.order_by('date')
+        return render(request, 'show_reservations.html', context={'reservations': reservations, 'message': message})
+    else:
+        if request.POST.get('sort') == "2":
+            reservations = reservations.order_by('-date')
+            request.session['order_by_r'] = 2
+        elif request.POST.get('sort') == "1":
+            reservations = reservations.order_by('date')
+            request.session['order_by_r'] = 1
+        elif request.POST.get('sort') == "0":
+            reservations = reservations.order_by('id')
+            request.session['order_by_r'] = 0
+        return render(request, 'show_reservations.html', context={'reservations': reservations, 'message': message})
 
